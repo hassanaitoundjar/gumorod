@@ -27,6 +27,11 @@ app.use(express.static('.')); // Serve static files from current directory
 
 // API Routes
 
+// Root route - serve the checkout page
+app.get('/', (req, res) => {
+  res.sendFile('api-checkout.html', { root: '.' });
+});
+
 // Get product details
 app.get('/api/products/:id', async (req, res) => {
   try {
