@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Checkout Experience</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 40px 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        .checkout-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .checkout-header {
+            background-color: #000;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .checkout-body {
+            padding: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .form-control {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 100%;
+        }
+        .checkout-btn {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 16px;
+            border-radius: 6px;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .checkout-btn:hover {
+            background-color: #333;
+        }
+        .price-display {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .card-info {
+            display: flex;
+            gap: 10px;
+        }
+        .card-number {
+            flex-grow: 1;
+        }
+        .card-expiry, .card-cvc {
+            width: 80px;
+        }
+        .payment-error {
+            color: #dc3545;
+            margin-top: 10px;
+            display: none;
+        }
+        .payment-success {
+            color: #28a745;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="checkout-container">
+            <div class="checkout-header">
+                <h2>Secure Checkout</h2>
+            </div>
+            <div class="checkout-body">
+                <div class="price-display">$59.95</div>
+                
+                <form id="payment-form">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" id="email" class="form-control" required placeholder="your@email.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="name" class="form-label">Name on card</label>
+                        <input type="text" id="name" class="form-control" required placeholder="John Doe">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Card information</label>
+                        <div class="card-info">
+                            <input type="text" id="card-number" class="form-control card-number" required placeholder="Card number" maxlength="19">
+                            <input type="text" id="card-expiry" class="form-control card-expiry" required placeholder="MM/YY" maxlength="5">
+                            <input type="text" id="card-cvc" class="form-control card-cvc" required placeholder="CVC" maxlength="3">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="country" class="form-label">Country</label>
+                        <select id="country" class="form-control" required>
+                            <option value="">Select country</option>
+                            <option value="US">United States</option>
+                            <option value="CA">Canada</option>
+                            <option value="GB">United Kingdom</option>
+                            <option value="AU">Australia</option>
+                            <option value="FR">France</option>
+                            <option value="DE">Germany</option>
+                            <option value="JP">Japan</option>
+                            <option value="MA">Morocco</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="checkout-btn">Pay $59.95</button>
+                    
+                    <div class="payment-error" id="payment-error">
+                        Payment failed. Please check your details and try again.
+                    </div>
+                    
+                    <div class="payment-success" id="payment-success">
+                        Payment successful! Redirecting to download page...
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const accessToken = 'pzHaoH5aa196X9skfkkYJDugCCt2P_KhiwoU_tH3rAo';
+            const productId = 'laraveldev'; // Your product ID
+            
+            // Format card number with spaces
+            document.getElementById('card-number').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+                let formattedValue = '';
+                
+                for (let i = 0; i < value.length; i++) {
+                    if (i > 0 && i % 4 === 0) {
+                        formattedValue += ' ';
+                    }
+                    formattedValue += value[i];
+                }
+                
+                e.target.value = formattedValue;
+            });
+            
+            // Format card expiry as MM/YY
+            document.getElementById('card-expiry').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+                
+                if (value.length > 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2);
+                }
+                
+                e.target.value = value;
+            });
+            
+            // Handle form submission
+            document.getElementById('payment-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const name = document.getElementById('name').value;
+                
+                // In a real implementation, you would securely collect card details
+                // and use a payment processor like Stripe or the Gumroad API
+                
+                // For this demo, we'll simulate the payment process
+                // and then redirect to Gumroad with the access token
+                
+                // Show loading state
+                const button = document.querySelector('.checkout-btn');
+                const originalText = button.textContent;
+                button.textContent = 'Processing...';
+                button.disabled = true;
+                
+                // Simulate API call
+                setTimeout(function() {
+                    // For demo purposes, always "succeed"
+                    document.getElementById('payment-success').style.display = 'block';
+                    
+                    // In a real implementation, you would use the Gumroad API with the access token
+                    // to create a license or grant access to the product
+                    
+                    // Redirect to Gumroad product with wanted=true to go directly to checkout
+                    // and pre-fill the email and name
+                    setTimeout(function() {
+                        const url = `https://laradevprof.gumroad.com/l/${productId}?wanted=true&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`;
+                        window.location.href = url;
+                    }, 2000);
+                    
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>

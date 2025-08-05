@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gumroad Checkout Implementation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 40px 0;
+            background-color: #f8f9fa;
+        }
+        .method-card {
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .method-header {
+            background-color: #f1f8ff;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e3e8ed;
+        }
+        .method-body {
+            padding: 20px;
+            background-color: white;
+        }
+        .code-block {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .custom-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #0d6efd;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 0;
+            transition: background-color 0.3s;
+        }
+        .custom-btn:hover {
+            background-color: #0b5ed7;
+            color: white;
+        }
+        .product-card {
+            border: 1px solid #e3e8ed;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: white;
+        }
+        .product-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0d6efd;
+            margin-bottom: 15px;
+        }
+        .product-description {
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="text-center mb-5">
+            <h1>Gumroad Checkout Implementation</h1>
+            <p class="lead">Different ways to implement Gumroad checkout in your website</p>
+        </header>
+
+        <div class="row">
+            <!-- Method 1: Modal Overlay -->
+            <div class="col-md-6">
+                <div class="method-card">
+                    <div class="method-header">
+                        <h2>Method 1: Modal Overlay</h2>
+                        <p>Opens a Gumroad product page in a modal on your website</p>
+                    </div>
+                    <div class="method-body">
+                        <p>This method uses Gumroad's JS to open a modal overlay with the product details. When the user clicks "Add to cart", they're redirected to Gumroad's checkout page.</p>
+                        
+                        <div class="code-block">
+                            <pre>&lt;script src="https://gumroad.com/js/gumroad.js"&gt;&lt;/script&gt;
+&lt;a class="gumroad-button" href="https://laradevprof.gumroad.com/l/laraveldev"&gt;Buy my product&lt;/a&gt;</pre>
+                        </div>
+                        
+                        <h4>Live Example:</h4>
+                        <div class="product-card">
+                            <div class="product-title">Custom Laravel Website Development</div>
+                            <div class="product-price">$59.95</div>
+                            <div class="product-description">Need a simple and clean Laravel website? I will develop a custom, secure, and mobile-friendly site tailored to your needs.</div>
+                            
+                            <!-- Gumroad Button -->
+                            <script src="https://gumroad.com/js/gumroad.js"></script>
+                            <a class="gumroad-button custom-btn" href="https://laradevprof.gumroad.com/l/laraveldev">Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Method 2: Direct to Checkout -->
+            <div class="col-md-6">
+                <div class="method-card">
+                    <div class="method-header">
+                        <h2>Method 2: Direct to Checkout</h2>
+                        <p>Sends customers directly to the Gumroad checkout page</p>
+                    </div>
+                    <div class="method-body">
+                        <p>This method skips the product page and sends users directly to the checkout page. You can also add URL parameters to pre-fill customer information.</p>
+                        
+                        <div class="code-block">
+                            <pre>&lt;a href="https://laradevprof.gumroad.com/l/laraveldev?wanted=true"&gt;Buy Now (Direct to Checkout)&lt;/a&gt;</pre>
+                        </div>
+                        
+                        <p>You can also pre-fill customer information using URL parameters:</p>
+                        
+                        <div class="code-block">
+                            <pre>&lt;a href="https://laradevprof.gumroad.com/l/laraveldev?wanted=true&email=customer@example.com"&gt;Buy Now (With Pre-filled Email)&lt;/a&gt;</pre>
+                        </div>
+                        
+                        <h4>Live Example:</h4>
+                        <div class="product-card">
+                            <div class="product-title">Custom Laravel Website Development</div>
+                            <div class="product-price">$59.95</div>
+                            <div class="product-description">Need a simple and clean Laravel website? I will develop a custom, secure, and mobile-friendly site tailored to your needs.</div>
+                            
+                            <!-- Direct Checkout Link -->
+                            <a class="custom-btn" href="https://laradevprof.gumroad.com/l/laraveldev?wanted=true">Buy Now (Direct to Checkout)</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Advanced Options -->
+        <div class="method-card mt-4">
+            <div class="method-header">
+                <h2>Advanced Options</h2>
+                <p>Additional URL parameters for customizing the checkout experience</p>
+            </div>
+            <div class="method-body">
+                <p>You can customize the checkout experience by adding URL parameters to pre-fill customer information:</p>
+                
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Description</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>wanted=true</td>
+                            <td>Sends directly to checkout</td>
+                            <td>?wanted=true</td>
+                        </tr>
+                        <tr>
+                            <td>email</td>
+                            <td>Pre-fills email address</td>
+                            <td>&email=customer@example.com</td>
+                        </tr>
+                        <tr>
+                            <td>name</td>
+                            <td>Pre-fills customer name</td>
+                            <td>&name=John%20Doe</td>
+                        </tr>
+                        <tr>
+                            <td>referrer</td>
+                            <td>Tracks referral source</td>
+                            <td>&referrer=yourwebsite</td>
+                        </tr>
+                        <tr>
+                            <td>price</td>
+                            <td>For pay-what-you-want products</td>
+                            <td>&price=20</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4>Complete Example with All Parameters:</h4>
+                <div class="code-block">
+                    <pre>https://laradevprof.gumroad.com/l/laraveldev?wanted=true&email=customer@example.com&name=John%20Doe&referrer=yourwebsite</pre>
+                </div>
+                
+                <a class="btn btn-primary mt-3" href="https://laradevprof.gumroad.com/l/laraveldev?wanted=true&email=customer@example.com&name=John%20Doe&referrer=yourwebsite" target="_blank">Try Complete Example</a>
+            </div>
+        </div>
+        
+        <!-- JavaScript Implementation -->
+        <div class="method-card mt-4">
+            <div class="method-header">
+                <h2>JavaScript Implementation</h2>
+                <p>Programmatically redirect to checkout</p>
+            </div>
+            <div class="method-body">
+                <p>You can also use JavaScript to programmatically redirect customers to the Gumroad checkout page:</p>
+                
+                <div class="code-block">
+                    <pre>
+&lt;script&gt;
+function redirectToCheckout(productId, email = '', name = '') {
+    // Base URL for the product
+    const baseUrl = `https://laradevprof.gumroad.com/l/${productId}`;
+    
+    // Add parameters
+    const params = new URLSearchParams();
+    params.append('wanted', 'true'); // Direct to checkout
+    
+    if (email) params.append('email', email);
+    if (name) params.append('name', name);
+    
+    // Redirect to checkout
+    window.location.href = `${baseUrl}?${params.toString()}`;
+}
+
+// Example usage
+document.getElementById('checkoutButton').addEventListener('click', function() {
+    const email = document.getElementById('emailInput').value;
+    const name = document.getElementById('nameInput').value;
+    redirectToCheckout('laraveldev', email, name);
+});
+&lt;/script&gt;</pre>
+                </div>
+                
+                <h4>Live Example:</h4>
+                <div class="product-card">
+                    <div class="product-title">Custom Laravel Website Development</div>
+                    <div class="product-price">$59.95</div>
+                    <div class="mb-3">
+                        <label for="emailInput" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="emailInput" placeholder="name@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="nameInput" class="form-label">Your name</label>
+                        <input type="text" class="form-control" id="nameInput" placeholder="John Doe">
+                    </div>
+                    <button id="checkoutButton" class="btn btn-primary">Proceed to Checkout</button>
+                </div>
+                
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        document.getElementById('checkoutButton').addEventListener('click', function() {
+                            const email = document.getElementById('emailInput').value;
+                            const name = document.getElementById('nameInput').value;
+                            
+                            // Base URL for the product
+                            const baseUrl = 'https://laradevprof.gumroad.com/l/laraveldev';
+                            
+                            // Add parameters
+                            const params = new URLSearchParams();
+                            params.append('wanted', 'true'); // Direct to checkout
+                            
+                            if (email) params.append('email', email);
+                            if (name) params.append('name', name);
+                            
+                            // Redirect to checkout
+                            window.location.href = `${baseUrl}?${params.toString()}`;
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

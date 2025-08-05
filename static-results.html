@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gumorod - Gumroad Products</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 2rem;
+        }
+        .product-card {
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s;
+            height: 100%;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+        .price-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2rem;
+        }
+        .product-description {
+            max-height: 100px;
+            overflow: hidden;
+        }
+        #productsContainer {
+            margin-top: 30px;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .api-info {
+            background-color: #e9f7fe;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="text-center mb-5">
+            <h1 class="display-4">Gumorod</h1>
+            <p class="lead">Your Gumroad Products Dashboard</p>
+        </header>
+
+        <div class="api-info">
+            <h3>Gumroad API Information</h3>
+            <p>This page displays the sample response from the Gumroad API using the access token:</p>
+            <code>pzHaoH5aa196X9skfkkYJDugCCt2P_KhiwoU_tH3rAo</code>
+            
+            <h4 class="mt-4">API Request Example:</h4>
+            <pre>curl https://api.gumroad.com/v2/products \
+-d "access_token=pzHaoH5aa196X9skfkkYJDugCCt2P_KhiwoU_tH3rAo" \
+-X GET</pre>
+        </div>
+
+        <h2>Products from Gumroad API</h2>
+        <div id="productsContainer">
+            <div class="row">
+                <!-- Products will be displayed here -->
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <h3>Raw API Response</h3>
+            <pre id="rawResponse">Loading...</pre>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample response from the Gumroad API
+        const sampleResponse = {
+            "success": true,
+            "products": [
+                {
+                    "name": "Custom Laravel Website Development",
+                    "preview_url": "https://public-files.gumroad.com/e73nm3bcu4z0huaikujykw9oouup",
+                    "description": "<p>Need a simple and clean Laravel website? I will develop a custom, secure, and mobile-friendly site tailored to your needs. Ideal for personal projects, small businesses, portfolios, or admin panels.</p><p><strong>What's Included:</strong></p><ul>\n<li>✅ Laravel 11 project setup</li>\n<li>✅ User authentication (login/register)</li>\n<li>✅ Responsive frontend (Blade + Tailwind CSS)</li>\n<li>✅ Basic admin dashboard (optional)</li>\n<li>✅ MySQL database setup</li>\n<li>✅ Clean code with documentation</li>\n<li>✅ 1 free revision</li>\n<li>✅ Fast delivery (3–5 days)</li>\n</ul><p><strong>Tech Stack:</strong> Laravel 11, Tailwind CSS, Blade, Vite, PHP, MySQL</p>",
+                    "customizable_price": false,
+                    "require_shipping": false,
+                    "custom_receipt": null,
+                    "custom_permalink": "laraveldev",
+                    "subscription_duration": null,
+                    "id": "akmed91SZ_f29JHwuKOUMA==",
+                    "url": null,
+                    "price": 5995,
+                    "currency": "usd",
+                    "short_url": "https://laradevprof.gumroad.com/l/laraveldev",
+                    "thumbnail_url": null,
+                    "tags": [],
+                    "formatted_price": "$59.95",
+                    "published": true,
+                    "file_info": {},
+                    "max_purchase_count": null,
+                    "deleted": false,
+                    "custom_fields": [],
+                    "custom_summary": null,
+                    "is_tiered_membership": false,
+                    "recurrences": null,
+                    "variants": [],
+                    "custom_delivery_url": null,
+                    "sales_count": 1,
+                    "sales_usd_cents": 5995
+                }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Display raw JSON response
+            document.getElementById('rawResponse').textContent = JSON.stringify(sampleResponse, null, 2);
+            
+            // Display products
+            const productsContainer = document.querySelector('#productsContainer .row');
+            
+            if (sampleResponse.products && sampleResponse.products.length > 0) {
+                sampleResponse.products.forEach(product => {
+                    const productCard = createProductCard(product);
+                    productsContainer.appendChild(productCard);
+                });
+            } else {
+                productsContainer.innerHTML = '<div class="col-12 text-center"><p>No products found</p></div>';
+            }
+        });
+
+        function createProductCard(product) {
+            const col = document.createElement('div');
+            col.className = 'col-md-4 mb-4';
+            
+            const card = document.createElement('div');
+            card.className = 'card product-card';
+            
+            // Create HTML content for the card
+            card.innerHTML = `
+                <img src="${product.thumbnail_url || 'https://via.placeholder.com/300x200?text=No+Image'}" class="card-img-top" alt="${product.name}">
+                <div class="badge bg-primary price-badge">${product.formatted_price || `$${(product.price / 100).toFixed(2)}`}</div>
+                <div class="card-body">
+                    <h5 class="card-title">${product.name}</h5>
+                    <div class="card-text product-description">${product.description || 'No description available'}</div>
+                    <p class="card-text mt-2"><small class="text-muted">Sales: ${product.sales_count || 0}</small></p>
+                    <div class="mt-3">
+                        <a href="${product.short_url}" target="_blank" class="btn btn-outline-primary">View on Gumroad</a>
+                    </div>
+                </div>
+            `;
+            
+            col.appendChild(card);
+            return col;
+        }
+    </script>
+</body>
+</html>

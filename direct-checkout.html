@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Checkout</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .checkout-container {
+            background-color: #222;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+        }
+        .checkout-header {
+            padding: 20px;
+            border-bottom: 1px solid #333;
+        }
+        .checkout-body {
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #ccc;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background-color: #333;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input::placeholder {
+            color: #888;
+        }
+        .card-info {
+            display: flex;
+            gap: 10px;
+        }
+        .card-number {
+            flex: 3;
+        }
+        .card-expiry, .card-cvc {
+            flex: 1;
+        }
+        .pay-button {
+            background-color: #fff;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            padding: 14px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .pay-button:hover {
+            background-color: #f0f0f0;
+        }
+        .gift-option {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .gift-option label {
+            margin-bottom: 0;
+            margin-left: 10px;
+        }
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #555;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <div class="checkout-header">
+            <h2>Email address</h2>
+            <input type="email" id="email" placeholder="Your email address">
+        </div>
+        
+        <div class="checkout-body">
+            <h2>Pay with</h2>
+            
+            <div class="form-group">
+                <label for="name">Name on card</label>
+                <input type="text" id="name" placeholder="John Doe">
+            </div>
+            
+            <div class="form-group">
+                <label>Card information</label>
+                <div class="card-info">
+                    <input type="text" id="card-number" class="card-number" placeholder="Card number">
+                    <input type="text" id="card-expiry" class="card-expiry" placeholder="MM/YY">
+                    <input type="text" id="card-cvc" class="card-cvc" placeholder="CVC">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Contact information</label>
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select id="country">
+                        <option value="MA">Morocco</option>
+                        <option value="US">United States</option>
+                        <option value="CA">Canada</option>
+                        <option value="GB">United Kingdom</option>
+                        <option value="FR">France</option>
+                        <option value="DE">Germany</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="gift-option">
+                <label class="toggle">
+                    <input type="checkbox" id="gift-checkbox">
+                    <span class="slider"></span>
+                </label>
+                <label for="gift-checkbox">Give as a gift?</label>
+            </div>
+            
+            <button class="pay-button" id="pay-button">Pay</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Format card number with spaces
+            document.getElementById('card-number').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+                let formattedValue = '';
+                
+                for (let i = 0; i < value.length; i++) {
+                    if (i > 0 && i % 4 === 0) {
+                        formattedValue += ' ';
+                    }
+                    formattedValue += value[i];
+                }
+                
+                e.target.value = formattedValue;
+            });
+            
+            // Format card expiry as MM/YY
+            document.getElementById('card-expiry').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+                
+                if (value.length > 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2);
+                }
+                
+                e.target.value = value;
+            });
+            
+            // Handle payment button click
+            document.getElementById('pay-button').addEventListener('click', function() {
+                const email = document.getElementById('email').value;
+                const name = document.getElementById('name').value;
+                const isGift = document.getElementById('gift-checkbox').checked;
+                
+                // In a real implementation, you would use the Gumroad API with the access token
+                // to create a purchase without showing the product name
+                
+                // For demonstration purposes, we'll use the access token to redirect to a success page
+                const accessToken = 'pzHaoH5aa196X9skfkkYJDugCCt2P_KhiwoU_tH3rAo';
+                const productId = 'laraveldev'; // Your product ID
+                
+                // Simulate processing
+                this.textContent = 'Processing...';
+                this.disabled = true;
+                
+                // In a real implementation, you would make an API call to Gumroad here
+                // using the access token to process the payment directly
+                
+                // For this demo, we'll redirect to Gumroad's checkout with the product ID
+                // but in a real implementation, you would use the Gumroad API to create a purchase
+                setTimeout(() => {
+                    // Construct URL with parameters
+                    let url = `https://laradevprof.gumroad.com/l/${productId}?`;
+                    url += `wanted=true&`; // Skip directly to checkout
+                    url += `email=${encodeURIComponent(email)}&`;
+                    url += `name=${encodeURIComponent(name)}&`;
+                    if (isGift) url += `gift=true&`;
+                    
+                    // Redirect to Gumroad checkout
+                    window.location.href = url;
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>
